@@ -1,21 +1,21 @@
 import { createBrowserRouter } from "react-router-dom";
-import RiderDashboard from "../pages/admin/rider/Dashboard";
 import AdminMainDashboard from "../pages/admin/Dashboard";
 import AdminProfilePage from "../pages/admin/AdminProfile";
 import StoreSettingsPage from "../pages/admin/StoreSetting";
-import SaraSidebar from "../pages/admin/sara/Sidebar";
-import SaraDashboard from "../pages/admin/sara/UserPage";
 import UsersPage from "../pages/admin/sara/UserPage";
 import AgentsPage from "../pages/admin/sara/AgentPage";
 import Profile from "../pages/admin/sara/Profile";
 import AllOwners from "../pages/admin/sara/shopowner/AllOwner";
+import SaraNavbar from "../pages/admin/sara/SaraNavbar";
+import Approval from "../pages/admin/sara/shopowner/Approval";
+import Order from "../pages/admin/sara/Orders/Order";
+import StoreSetting from "../pages/admin/sara/StoreSettings";
+import DashboardPage from "../pages/admin/rider/DashboardPage";
+
+
 
 
 const router = createBrowserRouter([
-  {
-    path: "/admin/rider",
-    element: <RiderDashboard/>,
-  },
   {
     path: "/admin",
     element: <AdminMainDashboard/>,
@@ -27,10 +27,6 @@ const router = createBrowserRouter([
   {
     path: "/admin-settings",
     element: <StoreSettingsPage/>,
-  },
-  {
-    path: "/sara-dashboard",
-    element: <SaraSidebar/>,
   },
   {
     path: "/sara/users",
@@ -45,12 +41,28 @@ const router = createBrowserRouter([
     element: <Profile/>,
   },
   {
-    path: "/sara/dashboard",
-    element: <SaraDashboard/>,
+    path: "/admin/sara",
+    element: <SaraNavbar/>,
   },
   {
     path: "/sara/shop-owners",
     element: <AllOwners/>,
+  },
+  {
+    path: "/sara/shop-owners/approvals",
+    element: <Approval/>,
+  },
+  {
+    path: "/sara/orders",
+    element: <Order/>,
+  },
+  {
+    path: "/sara/store-settings",
+    element: <StoreSetting/>,
+  },
+  {
+    path: "/admin/rider",
+    element: <DashboardPage/>,
   },
 
   

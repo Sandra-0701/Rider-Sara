@@ -55,7 +55,11 @@ const SaraSidebar = () => {
       name: 'Orders',
       icon: ShoppingBag,
       path: '/sara/orders',
-
+      submenus: [
+        { name: 'Current Orders', path: '/sara/orders/current' },
+        { name: 'Processing', path: '/sara/orders/processing' },
+        { name: 'Completed', path: '/sara/orders/completed' }
+      ]
     },
     {
       name: 'Order History',

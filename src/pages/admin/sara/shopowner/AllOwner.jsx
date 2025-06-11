@@ -41,7 +41,7 @@ const AllOwners = () => {
   return (
     <div className="flex h-screen bg-gray-50">
             <SaraSidebar />
-    <div className="p-6 ml-64"> 
+    <div className="flex-1 overflow-y-auto p-6 ml-64"> 
 
       <div className="flex items-center mb-6">
         <User className="mr-2" size={24} />

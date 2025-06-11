@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, User, Mail, Phone, MapPin, Lock } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Lock, Edit, Check, X } from 'lucide-react';
 import SaraSidebar from './Sidebar';
 
 const Profile = () => {
@@ -8,226 +8,130 @@ const Profile = () => {
     email: 'john.doe@example.com',
     phone: '+1 (555) 123-4567',
     address: '123 Main St, New York, NY 10001',
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+    password: 'passord'
   });
 
-  const [activeTab, setActiveTab] = useState('personal');
   const [isEditing, setIsEditing] = useState(false);
+  const [activeField, setActiveField] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfile(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSave = (field) => {
+    setActiveField(null);
     // Add your save logic here
-    setIsEditing(false);
   };
 
+  const profileFields = [
+    {
+      name: 'name',
+      label: 'Full Name',
+      icon: User,
+      value: profile.name
+    },
+    {
+      name: 'email',
+      label: 'Email Address',
+      icon: Mail,
+      value: profile.email
+    },
+    {
+      name: 'phone',
+      label: 'Phone Number',
+      icon: Phone,
+      value: profile.phone
+    },
+    {
+      name: 'address',
+      label: 'Address',
+      icon: MapPin,
+      value: profile.address
+    },
+
+    {
+      name: 'Change Password',
+      label: 'Change Password',
+      icon: Lock,
+      value: profile.password
+    }
+  ];
+
   return (
-    <div className="flex h-screen bg-gray-50"> 
-        <SaraSidebar />
-      <div className="flex ml-64 mb-6">
-        <Settings className="mr-2" size={24} />
-        <h1 className="text-2xl font-bold">Profile Settings</h1>
-      </div>
-
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        {/* Tabs */}
-        <div className="border-b border-gray-200">
-          <nav className="flex -mb-px">
+    <div className="flex h-screen bg-gray-50">
+      <SaraSidebar />
+      
+      <div className="flex-1 overflow-y-auto p-6 ml-64">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-2xl font-bold text-gray-800">Profile Settings</h1>
             <button
-              onClick={() => setActiveTab('personal')}
-              className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${activeTab === 'personal' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+              onClick={() => setIsEditing(!isEditing)}
+              className="flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100"
             >
-              Personal Information
-            </button>
-            <button
-              onClick={() => setActiveTab('security')}
-              className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${activeTab === 'security' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
-            >
-              Security
-            </button>
-          </nav>
-        </div>
-
-        {/* Personal Information Tab */}
-        {activeTab === 'personal' && (
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-semibold">Personal Information</h2>
-              {!isEditing ? (
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-                >
-                  Edit Profile
-                </button>
+              {isEditing ? (
+                <>
+                  <X size={16} className="mr-2" />
+                  Cancel Editing
+                </>
               ) : (
-                <div className="space-x-2">
-                  <button
-                    onClick={() => setIsEditing(false)}
-                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSubmit}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                  >
-                    Save Changes
-                  </button>
-                </div>
+                <>
+                  <Edit size={16} className="mr-2" />
+                  Edit Profile
+                </>
               )}
+            </button>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="p-6 space-y-6">
+              {profileFields.map((field) => (
+                <div key={field.name} className="border-b border-gray-100 pb-6 last:border-0 last:pb-0">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-4">
+                      <div className={`p-3 rounded-lg ${activeField === field.name ? 'bg-blue-50 text-blue-600' : 'bg-gray-50 text-gray-600'}`}>
+                        <field.icon size={20} />
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-500">{field.label}</h3>
+                        {activeField === field.name ? (
+                          <input
+                            type="text"
+                            name={field.name}
+                            value={field.value}
+                            onChange={handleInputChange}
+                            className="mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            autoFocus
+                          />
+                        ) : (
+                          <p className="mt-1 text-gray-900">{field.value}</p>
+                        )}
+                      </div>
+                    </div>
+                    {isEditing && (
+                      activeField === field.name ? (
+                        <button
+                          onClick={() => handleSave(field.name)}
+                          className="p-2 text-green-600 hover:bg-green-50 rounded-full"
+                        >
+                          <Check size={18} />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setActiveField(field.name)}
+                          className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-full"
+                        >
+                          <Edit size={16} />
+                        </button>
+                      )
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-
-            <form>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                      <User className="mr-2" size={16} />
-                      Full Name
-                    </label>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        name="name"
-                        value={profile.name}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    ) : (
-                      <p className="text-gray-900">{profile.name}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                      <Mail className="mr-2" size={16} />
-                      Email Address
-                    </label>
-                    {isEditing ? (
-                      <input
-                        type="email"
-                        name="email"
-                        value={profile.email}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    ) : (
-                      <p className="text-gray-900">{profile.email}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                      <Phone className="mr-2" size={16} />
-                      Phone Number
-                    </label>
-                    {isEditing ? (
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={profile.phone}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    ) : (
-                      <p className="text-gray-900">{profile.phone}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                      <MapPin className="mr-2" size={16} />
-                      Address
-                    </label>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        name="address"
-                        value={profile.address}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    ) : (
-                      <p className="text-gray-900">{profile.address}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </form>
           </div>
-        )}
-
-        {/* Security Tab */}
-        {activeTab === 'security' && (
-          <div className="p-6">
-            <h2 className="text-lg font-semibold mb-6">Security Settings</h2>
-            
-            <form onSubmit={handleSubmit} className="space-y-6 max-w-lg">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                  <Lock className="mr-2" size={16} />
-                  Current Password
-                </label>
-                <input
-                  type="password"
-                  name="currentPassword"
-                  value={profile.currentPassword}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter current password"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                  <Lock className="mr-2" size={16} />
-                  New Password
-                </label>
-                <input
-                  type="password"
-                  name="newPassword"
-                  value={profile.newPassword}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter new password"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center">
-                  <Lock className="mr-2" size={16} />
-                  Confirm New Password
-                </label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={profile.confirmPassword}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Confirm new password"
-                />
-              </div>
-
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                >
-                  Update Password
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
