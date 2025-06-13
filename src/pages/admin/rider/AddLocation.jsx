@@ -45,9 +45,8 @@ const AddLocation = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
     console.log('Location added:', formData);
-    // Reset form after submission
+
     setFormData({
       name: '',
       state: '',
@@ -61,7 +60,7 @@ const AddLocation = () => {
   };
 
   const handleMapSelection = () => {
-    // Simulate map selection
+   
     const mockCoordinates = {
       lat: (Math.random() * 10).toFixed(6),
       lng: (Math.random() * 10).toFixed(6)
@@ -205,7 +204,7 @@ const AddLocation = () => {
           </div>
         </div>
 
-        {/* Map Coordinates */}
+        
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <label className="block text-sm font-medium text-gray-700">
@@ -274,7 +273,6 @@ const AddLocation = () => {
               </div>
               
               <div className="p-6">
-                {/* Replace this with your actual map component */}
                 <div className="bg-gray-200 h-96 rounded-lg flex items-center justify-center">
                   <div className="text-center">
                     <p className="text-gray-600 mb-4">Map would be displayed here</p>

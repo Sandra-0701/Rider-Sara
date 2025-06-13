@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import { ShoppingCart, Search, Package, Clock, Check, X, ChevronDown, ChevronRight, ChevronLeft } from 'lucide-react';
-import SaraSidebar from '../Sidebar';
 
-const Order = () => {
-  // Sample orders data
+const OrderHistory = () => {
+  // Sample 
   const [orders, setOrders] = useState([
-    { id: 1001, customer: 'Alex Johnson', items: 3, total: 125.99, status: 'Processing', orderDate: '2023-05-25', deliveryDate: '2023-05-28' },
-    { id: 1002, customer: 'Maria Garcia', items: 5, total: 89.50, status: 'Shipped', orderDate: '2023-05-24', deliveryDate: '2023-05-27' },
+    { id: 1001, customer: 'Alex Johnson', items: 3, total: 125.99, status: 'Delivered', orderDate: '2023-05-25', deliveryDate: '2023-05-28' },
+    { id: 1002, customer: 'Maria Garcia', items: 5, total: 89.50, status: 'Delivered', orderDate: '2023-05-24', deliveryDate: '2023-05-27' },
     { id: 1003, customer: 'James Wilson', items: 2, total: 45.75, status: 'Delivered', orderDate: '2023-05-23', deliveryDate: '2023-05-25' },
-    { id: 1004, customer: 'Sarah Miller', items: 1, total: 32.99, status: 'Processing', orderDate: '2023-05-26', deliveryDate: '2023-05-29' },
+    { id: 1004, customer: 'Sarah Miller', items: 1, total: 32.99, status: 'Cancelled', orderDate: '2023-05-26', deliveryDate: '2023-05-29' },
     { id: 1005, customer: 'David Lee', items: 4, total: 156.20, status: 'Cancelled', orderDate: '2023-05-22', deliveryDate: '2023-05-25' },
+    { id: 1006, customer: 'Emily Chen', items: 2, total: 78.45, status: 'Delivered', orderDate: '2023-05-20', deliveryDate: '2023-05-23' },
+    { id: 1007, customer: 'Michael Brown', items: 1, total: 29.99, status: 'Delivered', orderDate: '2023-05-18', deliveryDate: '2023-05-21' },
   ]);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('All');
+  const [dateFilter, setDateFilter] = useState('All');
 
-  // Filter orders based on search term and status
   const filteredOrders = orders.filter(order => {
     const matchesSearch = 
       order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -25,24 +26,31 @@ const Order = () => {
       selectedStatus === 'All' || 
       order.status === selectedStatus;
     
-    return matchesSearch && matchesStatus;
+    const matchesDate = 
+      dateFilter === 'All' ||
+      (dateFilter === 'Last 7 days' && isWithinDays(order.orderDate, 7)) ||
+      (dateFilter === 'Last 30 days' && isWithinDays(order.orderDate, 30));
+    
+    return matchesSearch && matchesStatus && matchesDate;
   });
 
-  const updateOrderStatus = (id, newStatus) => {
-    setOrders(orders.map(order => 
-      order.id === id ? { ...order, status: newStatus } : order
-    ));
+  const isWithinDays = (dateString, days) => {
+    const orderDate = new Date(dateString);
+    const today = new Date();
+    const diffTime = today - orderDate;
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+    return diffDays <= days;
   };
 
-  const statusOptions = ['All', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+  const statusOptions = ['All', 'Delivered', 'Cancelled'];
+  const dateOptions = ['All', 'Last 7 days', 'Last 30 days'];
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <SaraSidebar />
-      <div className="flex-1 overflow-y-auto p-6 ml-64">
+    <div className="bg-gray-50 min-h-screen p-4 md:p-6">
+      <div className="max-w-7xl mx-auto">
         <div className="flex items-center mb-6">
-          <ShoppingCart className="mr-2" size={24} />
-          <h1 className="text-2xl font-bold">Current Orders</h1>
+          <Clock className="mr-2" size={24} />
+          <h1 className="text-2xl font-bold">Order History</h1>
         </div>
 
         <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -61,17 +69,32 @@ const Order = () => {
               />
             </div>
             
-            <div className="flex items-center space-x-2 w-full sm:w-auto">
-              <label className="text-sm text-gray-600">Status:</label>
-              <select
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {statusOptions.map(option => (
-                  <option key={option} value={option}>{option}</option>
-                ))}
-              </select>
+            <div className="flex items-center space-x-4 w-full sm:w-auto">
+              <div className="flex items-center space-x-2">
+                <label className="text-sm text-gray-600">Status:</label>
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {statusOptions.map(option => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <label className="text-sm text-gray-600">Date:</label>
+                <select
+                  value={dateFilter}
+                  onChange={(e) => setDateFilter(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {dateOptions.map(option => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 
@@ -123,8 +146,6 @@ const Order = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        order.status === 'Processing' ? 'bg-yellow-100 text-yellow-800' :
-                        order.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
                         order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
                         'bg-red-100 text-red-800'
                       }`}>
@@ -137,34 +158,7 @@ const Order = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {order.deliveryDate}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                      {order.status === 'Processing' && (
-                        <>
-                          <button 
-                            onClick={() => updateOrderStatus(order.id, 'Shipped')}
-                            className="text-blue-600 hover:text-blue-900 p-1 rounded-md hover:bg-blue-50"
-                            title="Mark as Shipped"
-                          >
-                            <Package className="inline" size={18} />
-                          </button>
-                          <button 
-                            onClick={() => updateOrderStatus(order.id, 'Cancelled')}
-                            className="text-red-600 hover:text-red-900 p-1 rounded-md hover:bg-red-50"
-                            title="Cancel Order"
-                          >
-                            <X className="inline" size={18} />
-                          </button>
-                        </>
-                      )}
-                      {order.status === 'Shipped' && (
-                        <button 
-                          onClick={() => updateOrderStatus(order.id, 'Delivered')}
-                          className="text-green-600 hover:text-green-900 p-1 rounded-md hover:bg-green-50"
-                          title="Mark as Delivered"
-                        >
-                          <Check className="inline" size={18} />
-                        </button>
-                      )}
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button 
                         className="text-gray-600 hover:text-gray-900 p-1 rounded-md hover:bg-gray-50"
                         title="View Details"
@@ -177,6 +171,17 @@ const Order = () => {
               </tbody>
             </table>
           </div>
+
+          {/* Empty State */}
+          {filteredOrders.length === 0 && (
+            <div className="text-center py-12">
+              <Package className="mx-auto h-12 w-12 text-gray-400" />
+              <h3 className="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Try adjusting your search or filter criteria
+              </p>
+            </div>
+          )}
 
           {/* Pagination */}
           <div className="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
@@ -221,4 +226,4 @@ const Order = () => {
   );
 };
 
-export default Order;
+export default OrderHistory;

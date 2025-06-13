@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { User, Search, Check, X, Clock, ChevronDown, ChevronRight, ChevronLeft } from 'lucide-react';
-import SaraSidebar from '../Sidebar';
-
 const Approval = () => {
   // Sample pending approval data
   const [pendingApprovals, setPendingApprovals] = useState([
@@ -13,7 +11,7 @@ const Approval = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Filter approvals based on search term
+  
   const filteredApprovals = pendingApprovals.filter(approval =>
     approval.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     approval.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -21,19 +19,18 @@ const Approval = () => {
   );
 
   const handleApprove = (id) => {
-    // In a real app, you would send an API request here
+  
     setPendingApprovals(pendingApprovals.filter(approval => approval.id !== id));
   };
 
   const handleReject = (id) => {
-    // In a real app, you would send an API request here
+    
     setPendingApprovals(pendingApprovals.filter(approval => approval.id !== id));
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <SaraSidebar />
-      <div className="flex-1 overflow-y-auto p-6 ml-64">
+    <div className="bg-gray-50 min-h-screen p-4 md:p-6">
+      <div className="max-w-7xl mx-auto">
         <div className="flex items-center mb-6">
           <Clock className="mr-2" size={24} />
           <h1 className="text-2xl font-bold">Pending Approvals</h1>

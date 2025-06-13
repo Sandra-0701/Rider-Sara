@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Settings, Save, Image, Mail, MapPin, Phone, Globe, ChevronDown } from 'lucide-react';
-import SaraSidebar from './Sidebar';
 
 const StoreSetting = () => {
   // Store settings data
@@ -50,9 +49,8 @@ const StoreSetting = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <SaraSidebar />
-      <div className="flex-1 overflow-y-auto p-6 ml-64">
+    <div className="bg-gray-50 min-h-screen p-4 md:p-6">
+      <div className="max-w-7xl mx-auto">
         <div className="flex items-center mb-6">
           <Settings className="mr-2" size={24} />
           <h1 className="text-2xl font-bold">Store Settings</h1>

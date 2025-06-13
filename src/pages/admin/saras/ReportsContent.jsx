@@ -11,8 +11,10 @@ const ReportsContent = () => {
   ];
 
   const handleDownload = (format, reportId) => {
+    // In a real app, this would trigger an API call or file download
     console.log(`Downloading report ${reportId} in ${format} format`);
-    
+    // Example implementation:
+    // window.open(`/api/reports/${reportId}/download?format=${format}`, '_blank');
   };
 
   return (
