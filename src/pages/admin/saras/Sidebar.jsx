@@ -12,7 +12,7 @@ import {
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, activeMenu, setActiveMenu }) => {
   const returnToAdmin = () => {
-    window.location.href = '/admin';
+    window.location.href = '/';
   };
 
   const NavItem = ({ icon: Icon, label, menuKey }) => (
